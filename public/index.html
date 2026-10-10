@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Teman Rencana</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <script>
+      try {
+        const saved = JSON.parse(localStorage.getItem("teman-rencana-v1") || "null");
+        if (saved && saved.theme === "dark") document.documentElement.dataset.theme = "dark";
+      } catch (error) {
+        // Abaikan data tersimpan yang rusak. Tema terang tetap dipakai.
+      }
+    </script>
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <button type="button" id="open-settings" class="icon-button" aria-label="Pengaturan" title="Pengaturan">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.2 7.2 0 0 0-1.63-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.58.22-1.12.53-1.63.94l-2.39-.96a.5.5 0 0 0-.6.22L2.71 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.13.22.39.31.6.22l2.39-.96c.5.41 1.05.72 1.63.94l.36 2.54c.05.24.26.42.5.42h3.84c.24 0 .45-.18.5-.42l.36-2.54c.58-.22 1.12-.53 1.63-.94l2.39.96c.22.09.47 0 .6-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/>
+          </svg>
+        </button>
+        <div class="brand">
+          <p class="eyebrow">Asisten wisata harian</p>
+          <h1>Teman Rencana</h1>
+          <p id="hello" class="hello" hidden></p>
+          <p class="lede">Rencana satu hari untuk kota di Indonesia, mengikuti budget, selera, dan cuaca.</p>
+        </div>
+        <div class="toolbar">
+          <div class="tone" role="group" aria-label="Gaya bahasa">
+            <button type="button" data-tone="santai" aria-pressed="true" aria-label="Santai" title="Santai">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="8.25" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                <circle cx="9" cy="10.2" r="1" fill="currentColor"/>
+                <circle cx="15" cy="10.2" r="1" fill="currentColor"/>
+                <path d="M8.6 13.6c.9 1.5 2.1 2.2 3.4 2.2s2.5-.7 3.4-2.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <button type="button" data-tone="formal" aria-pressed="false" aria-label="Formal" title="Formal">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M6.6 19.4v-1.1C6.6 16 8.8 14.2 12 14.2s5.4 1.8 5.4 4.1v1.1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M12 14.3 10.7 19.2h2.6L12 14.3z" fill="currentColor"/>
+              </svg>
+            </button>
+          </div>
+          <div class="tone" role="group" aria-label="Tampilan">
+            <button type="button" data-theme-choice="light" aria-pressed="true" aria-label="Terang" title="Terang">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="12" r="3.4" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                <path d="M12 3.6v2.1M12 18.3v2.1M3.6 12h2.1M18.3 12h2.1M6.1 6.1l1.5 1.5M16.4 16.4l1.5 1.5M17.9 6.1l-1.5 1.5M7.6 16.4l-1.5 1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <button type="button" data-theme-choice="dark" aria-pressed="false" aria-label="Gelap" title="Gelap">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M15.4 4.1a7.6 7.6 0 1 0 4.4 13.1A8 8 0 0 1 15.4 4.1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <section class="chat-panel" aria-label="Percakapan">
+          <div id="chat-box" class="chat-box" aria-live="polite">
+            <div id="chat-empty" class="empty">
+              <p id="greeting">Sebutkan kota, budget, dan suasana yang kamu mau.</p>
+              <div class="suggestions">
+                <button type="button" data-suggestion="Aku di Bandung, budget 200 ribu, mau yang santai dan ada kopi.">
+                  Bandung, 200 ribu, santai dan kopi
+                </button>
+                <button type="button" data-suggestion="Aku di Yogyakarta, budget 150 ribu, suka museum dan makan murah.">
+                  Yogyakarta, 150 ribu, museum dan makan murah
+                </button>
+                <button type="button" data-suggestion="Lagi di Jakarta, budget 300 ribu. Kalau hujan, cari yang indoor.">
+                  Jakarta, 300 ribu, utamakan indoor kalau hujan
+                </button>
+              </div>
+            </div>
+          </div>
+          <form id="chat-form" class="composer">
+            <label class="sr-only" for="user-input">Pesan untuk Teman Rencana</label>
+            <input
+              id="user-input"
+              type="text"
+              maxlength="500"
+              placeholder="Tulis kota, budget, atau perubahan rencana..."
+              autocomplete="off"
+              enterkeyhint="send"
+            />
+            <button type="submit">Kirim</button>
+          </form>
+          <p id="composer-note" class="composer-note" role="status"></p>
+        </section>
+      </main>
+    </div>
+
+    <div id="settings-modal" class="modal" hidden>
+      <div class="modal-backdrop" data-close-modal></div>
+      <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+        <div class="modal-head">
+          <h2 id="settings-title">Pengaturan</h2>
+          <button type="button" id="close-settings" class="icon-button" aria-label="Tutup pengaturan" title="Tutup">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+        <section class="panel-block">
+          <h3>Parameter</h3>
+          <dl id="parameters" class="facts"></dl>
+        </section>
+        <section class="panel-block">
+          <h3>Memori</h3>
+          <p class="hint">Nama, kota, budget, dan selera tersimpan di browser ini.</p>
+          <div class="name-row">
+            <label for="display-name">Nama</label>
+            <input id="display-name" type="text" maxlength="40" placeholder="Untuk sapaan" autocomplete="nickname" />
+          </div>
+          <dl id="profile" class="facts"></dl>
+        </section>
+        <button type="button" id="clear-chat" class="ghost">Hapus percakapan</button>
+      </div>
+    </div>
+    <script src="/js/script.js"></script>
+  </body>
+</html>
